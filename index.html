@@ -4,348 +4,58 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>UJ92_shop</title>
-  
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      -webkit-tap-highlight-color: transparent;
-    }
-    
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background-color: #000000;
-      color: #ffffff;
-      min-height: 100vh;
-      overflow-x: hidden;
-      display: flex;
-      flex-direction: column;
-      padding-bottom: 88px;
+      background-color: #000000; color: #ffffff; min-height: 100vh; overflow-x: hidden;
+      display: flex; flex-direction: column; padding-bottom: 88px;
     }
-
-    .font-mono {
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-    }
-
-    #waveCanvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: 0;
-      pointer-events: none;
-      opacity: 0.6;
-    }
-
-    .app-container {
-      position: relative;
-      z-index: 10;
-      width: 100%;
-      max-width: 440px;
-      margin: 0 auto;
-      padding: 16px;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .btn-grow {
-      transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.15s;
-      cursor: pointer;
-    }
-    .btn-grow:active {
-      transform: scale(0.96);
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    input, select {
-      background: #141418;
-      border: 1px solid #2e2e36;
-      color: #ffffff;
-      border-radius: 12px;
-      padding: 10px 14px;
-      font-size: 14px;
-      outline: none;
-    }
-    input:focus {
-      border-color: #ffffff;
-    }
-
-    .badge {
-      font-size: 10px;
-      padding: 3px 7px;
-      border-radius: 6px;
-      font-weight: 800;
-      text-transform: uppercase;
-    }
-
-    /* Карточки */
-    .product-card {
-      background: rgba(18, 18, 22, 0.92);
-      border: 1px solid #282830;
-      backdrop-filter: blur(10px);
-      border-radius: 18px;
-      padding: 14px 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .qty-btn {
-      width: 34px;
-      height: 34px;
-      border-radius: 10px;
-      background: #222228;
-      border: 1px solid #383842;
-      color: #fff;
-      font-size: 18px;
-      font-weight: bold;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-    }
-
-    /* Нижнее меню навигации (Магазин / Кейсы / Аккаунт) */
+    .font-mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+    #waveCanvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none; opacity: 0.6; }
+    .app-container { position: relative; z-index: 10; width: 100%; max-width: 440px; margin: 0 auto; padding: 16px; flex: 1; display: flex; flex-direction: column; }
+    .btn-grow { transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.15s; cursor: pointer; }
+    .btn-grow:active { transform: scale(0.96); }
+    .hidden { display: none !important; }
+    input, select { background: #141418; border: 1px solid #2e2e36; color: #ffffff; border-radius: 12px; padding: 10px 14px; font-size: 14px; outline: none; }
+    input:focus { border-color: #ffffff; }
+    .badge { font-size: 10px; padding: 3px 7px; border-radius: 6px; font-weight: 800; text-transform: uppercase; }
+    .product-card { background: rgba(18, 18, 22, 0.92); border: 1px solid #282830; backdrop-filter: blur(10px); border-radius: 18px; padding: 14px 16px; display: flex; flex-direction: column; gap: 12px; }
+    .qty-btn { width: 34px; height: 34px; border-radius: 10px; background: #222228; border: 1px solid #383842; color: #fff; font-size: 18px; font-weight: bold; display: flex; align-items: center; justify-content: center; cursor: pointer; }
     .bottom-nav {
-      position: fixed;
-      bottom: 10px;
-      left: 16px;
-      right: 16px;
-      max-width: 408px;
-      margin: 0 auto;
-      height: 62px;
-      background: rgba(20, 20, 24, 0.95);
-      backdrop-filter: blur(16px);
-      border: 1px solid #2e2e36;
-      border-radius: 32px;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      z-index: 60;
-      padding: 0 6px;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.75);
+      position: fixed; bottom: 10px; left: 16px; right: 16px; max-width: 408px; margin: 0 auto; height: 62px;
+      background: rgba(20, 20, 24, 0.95); backdrop-filter: blur(16px); border: 1px solid #2e2e36; border-radius: 32px;
+      display: flex; justify-content: space-around; align-items: center; z-index: 60; padding: 0 6px; box-shadow: 0 8px 30px rgba(0,0,0,0.75);
     }
-    .nav-item {
-      flex: 1;
-      height: 48px;
-      border-radius: 24px;
-      background: none;
-      border: none;
-      color: #77777e;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .nav-item.active {
-      background: rgba(255, 255, 255, 0.12);
-      color: #ffffff;
-    }
-    .nav-avatar {
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      background: #333;
-      border: 1.5px solid #666;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 11px;
-      font-weight: 800;
-      color: #fff;
-    }
-    .nav-item.active .nav-avatar {
-      border-color: #ffffff;
-    }
-
-    /* Меню выполнения заказа */
-    .cdek-circle-btn {
-      width: 58px;
-      height: 58px;
-      border-radius: 50%;
-      background: #1c1c20;
-      border: 1px solid #2e2e34;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-      color: #fff;
-      margin: 0 auto 6px;
-    }
-    .timeline-row {
-      display: flex;
-      gap: 14px;
-      position: relative;
-      padding-bottom: 22px;
-    }
-    .timeline-row:not(:last-child)::after {
-      content: '';
-      position: absolute;
-      left: 15px;
-      top: 32px;
-      bottom: 0;
-      width: 2px;
-      background: #2c2c30;
-    }
-    .timeline-row.done:not(:last-child)::after {
-      background: #22c55e;
-    }
-    .tl-dot {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      font-weight: bold;
-      flex-shrink: 0;
-      z-index: 2;
-    }
+    .nav-item { flex: 1; height: 48px; border-radius: 24px; background: none; border: none; color: #77777e; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+    .nav-item.active { background: rgba(255, 255, 255, 0.12); color: #ffffff; }
+    .nav-avatar { width: 26px; height: 26px; border-radius: 50%; background: #333; border: 1.5px solid #666; overflow: hidden; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; color: #fff; }
+    .nav-item.active .nav-avatar { border-color: #ffffff; }
+    .cdek-circle-btn { width: 58px; height: 58px; border-radius: 50%; background: #1c1c20; border: 1px solid #2e2e34; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #fff; margin: 0 auto 6px; }
+    .timeline-row { display: flex; gap: 14px; position: relative; padding-bottom: 22px; }
+    .timeline-row:not(:last-child)::after { content: ''; position: absolute; left: 15px; top: 32px; bottom: 0; width: 2px; background: #2c2c30; }
+    .timeline-row.done:not(:last-child)::after { background: #22c55e; }
+    .tl-dot { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; flex-shrink: 0; z-index: 2; }
     .tl-green { background: #22c55e; color: #000; }
     .tl-yellow { background: #f59e0b; color: #000; }
     .tl-red { background: #ef4444; color: #fff; }
     .tl-gray { background: #222226; color: #666; border: 1px solid #333; }
-
-    /* Профиль */
-    .profile-box {
-      background: rgba(22, 22, 26, 0.95);
-      border: 1px solid #2e2e34;
-      border-radius: 24px;
-      padding: 18px;
-    }
-    .profile-inv-btn {
-      background: #232329;
-      border: 1px solid #34343c;
-      border-radius: 16px;
-      padding: 10px 14px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      min-width: 120px;
-      cursor: pointer;
-    }
-
-    /* Выезжающая шторка «Ваш подарок» */
-    .sheet-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.82);
-      backdrop-filter: blur(6px);
-      z-index: 100;
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-    }
-    .gift-sheet {
-      width: 100%;
-      max-width: 440px;
-      background: #121216;
-      border-top: 1px solid #2c2c34;
-      border-radius: 28px 28px 0 0;
-      padding: 12px 20px 28px;
-      color: #ffffff;
-      animation: sheetUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    @keyframes sheetUp {
-      from { transform: translateY(100%); }
-      to { transform: translateY(0); }
-    }
-    .sheet-handle {
-      width: 42px;
-      height: 4px;
-      background: #3a3a44;
-      border-radius: 4px;
-      margin: 0 auto 14px;
-    }
-    .gift-img-box {
-      width: 150px;
-      height: 150px;
-      margin: 18px auto 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      filter: drop-shadow(0 12px 28px rgba(255, 255, 255, 0.12));
-    }
-    .gift-img-box img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
-
-    /* Стиль анимации рулетки открытия */
-    .roulette-container {
-      background: #14141a;
-      border: 1px solid #2a2a35;
-      border-radius: 18px;
-      padding: 14px;
-      text-align: center;
-      overflow: hidden;
-      position: relative;
-      margin: 6px 0;
-    }
-    .roulette-wrapper {
-      position: relative;
-      width: 100%;
-      height: 104px;
-      overflow: hidden;
-      margin: 10px 0 4px;
-      border-radius: 12px;
-      background: #0d0d12;
-    }
-    .roulette-tape {
-      display: flex;
-      position: absolute;
-      left: 0;
-      top: 0;
-      height: 100%;
-      transition: transform 3.2s cubic-bezier(0.1, 0.8, 0.1, 1);
-      will-change: transform;
-    }
-    .roulette-item {
-      width: 90px;
-      flex-shrink: 0;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      border-right: 1px solid #1a1a24;
-      background: #121217;
-      gap: 6px;
-    }
-    .roulette-item img {
-      width: 46px;
-      height: 46px;
-      object-fit: contain;
-    }
-    .roulette-item.marker-won {
-      background: radial-gradient(circle, rgba(255, 255, 255, 0.18) 0%, #121217 100%);
-    }
-    .roulette-pointer {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: calc(50% - 2px);
-      width: 4px;
-      background: #ef4444;
-      z-index: 50;
-      box-shadow: 0 0 10px #ef4444;
-    }
+    .profile-box { background: rgba(22, 22, 26, 0.95); border: 1px solid #2e2e34; border-radius: 24px; padding: 18px; }
+    .profile-inv-btn { background: #232329; border: 1px solid #34343c; border-radius: 16px; padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; gap: 10px; min-width: 120px; cursor: pointer; }
+    .sheet-backdrop { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.82); backdrop-filter: blur(6px); z-index: 100; display: flex; align-items: flex-end; justify-content: center; }
+    .gift-sheet { width: 100%; max-width: 440px; background: #121216; border-top: 1px solid #2c2c34; border-radius: 28px 28px 0 0; padding: 12px 20px 28px; color: #ffffff; animation: sheetUp 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
+    @keyframes sheetUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+    .sheet-handle { width: 42px; height: 4px; background: #3a3a44; border-radius: 4px; margin: 0 auto 14px; }
+    .gift-img-box { width: 150px; height: 150px; margin: 18px auto 12px; display: flex; align-items: center; justify-content: center; filter: drop-shadow(0 12px 28px rgba(255, 255, 255, 0.12)); }
+    .gift-img-box img { width: 100%; height: 100%; object-fit: contain; }
+    .roulette-container { background: #14141a; border: 1px solid #2a2a35; border-radius: 18px; padding: 14px; text-align: center; overflow: hidden; position: relative; margin: 6px 0; }
+    .roulette-wrapper { position: relative; width: 100%; height: 104px; overflow: hidden; margin: 10px 0 4px; border-radius: 12px; background: #0d0d12; }
+    .roulette-tape { display: flex; position: absolute; left: 0; top: 0; height: 100%; transition: transform 3.2s cubic-bezier(0.1, 0.8, 0.1, 1); will-change: transform; }
+    .roulette-item { width: 90px; flex-shrink: 0; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; border-right: 1px solid #1a1a24; background: #121217; gap: 6px; }
+    .roulette-item img { width: 46px; height: 46px; object-fit: contain; }
+    .roulette-item.marker-won { background: radial-gradient(circle, rgba(255, 255, 255, 0.18) 0%, #121217 100%); }
+    .roulette-pointer { position: absolute; top: 0; bottom: 0; left: calc(50% - 2px); width: 4px; background: #ef4444; z-index: 50; box-shadow: 0 0 10px #ef4444; }
   </style>
 </head>
 <body>
@@ -354,7 +64,6 @@
 
   <div class="app-container">
 
-    <!-- ЕДИНАЯ ВЕРХНЯЯ ШАПКА С БАЛАНСОМ И КУРСОМ GRAM BYBIT -->
     <header style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; padding-bottom: 12px; margin-bottom: 14px;">
       <div onclick="handleTitleClicks()" style="cursor: pointer; user-select: none;">
         <div style="display: flex; align-items: center; gap: 8px;">
@@ -367,7 +76,6 @@
       </div>
 
       <div style="display: flex; gap: 8px; align-items: center;">
-        <!-- Плашка баланса пользователя -->
         <div onclick="openDepositModal()" class="btn-grow" style="background: #16161c; border: 1px solid #32323c; padding: 6px 10px; border-radius: 14px; display: flex; align-items: center; gap: 8px; cursor: pointer;">
           <div style="text-align: right;">
             <div class="font-mono" style="font-size: 13px; font-weight: 900; color: #ffffff;">$<span id="topBalanceUsd">0.00</span></div>
@@ -382,16 +90,12 @@
       </div>
     </header>
 
-    <!-- ================= 1. ОТДЕЛ: МАГАЗИН ================= -->
+    <!-- 1. МАГАЗИН -->
     <section id="sectionShop" style="display: flex; flex-direction: column; gap: 14px;">
       <div style="font-size: 11px; text-transform: uppercase; color: #888; font-weight: 700; letter-spacing: 0.5px;">
         Выберите страну и количество номеров:
       </div>
-
-      <!-- Список стран -->
       <div id="catalogContainer" style="display: flex; flex-direction: column; gap: 10px;"></div>
-
-      <!-- Плавающая кнопка перехода в корзину -->
       <div id="floatingCartBtn" class="hidden" style="position: sticky; bottom: 78px; z-index: 40;">
         <button onclick="openCartScreen()" class="btn-grow" style="width: 100%; padding: 15px 18px; background: #ffffff; color: #000000; border: none; border-radius: 16px; display: flex; justify-content: space-between; align-items: center; font-weight: 900; font-size: 14px; box-shadow: 0 6px 24px rgba(255,255,255,0.22);">
           <span>🛒 Корзина (<span id="floatCartQty">0</span> шт.)</span>
@@ -400,7 +104,7 @@
       </div>
     </section>
 
-    <!-- ================= 2. ЭКРАН: КОРЗИНА ================= -->
+    <!-- 2. КОРЗИНА -->
     <section id="sectionCart" class="hidden" style="display: flex; flex-direction: column; gap: 14px;">
       <div style="display: flex; justify-content: space-between; align-items: center;">
         <button onclick="switchMainTab('shop')" class="btn-grow" style="background: none; border: none; color: #aaa; font-size: 13px; font-weight: 700; cursor: pointer;">
@@ -412,40 +116,28 @@
         </button>
       </div>
 
-      <!-- Список выбранных номеров -->
       <div id="cartItemsContainer" style="display: flex; flex-direction: column; gap: 8px;"></div>
 
-      <!-- Выбор метода оплаты (С баланса / GRAM / USDT TON) -->
       <div style="background: #141418; border: 1px solid #28282e; padding: 14px; border-radius: 16px; display: flex; flex-direction: column; gap: 8px;">
-        <span style="font-size: 11px; text-transform: uppercase; color: #888; font-weight: 700;">
-          Метод оплаты:
-        </span>
+        <span style="font-size: 11px; text-transform: uppercase; color: #888; font-weight: 700;">Метод оплаты:</span>
         <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px;">
-          <button id="payMethodGram" onclick="setPaymentCurrency('GRAM')" class="btn-grow" style="padding: 11px 6px; border-radius: 12px; border: 1px solid #fff; background: #fff; color: #000; font-weight: 900; font-size: 11px;">
-            💎 GRAM
-          </button>
-          <button id="payMethodUsdt" onclick="setPaymentCurrency('USDT')" class="btn-grow" style="padding: 11px 6px; border-radius: 12px; border: 1px solid #333; background: #1c1c22; color: #aaa; font-weight: 900; font-size: 11px;">
-            ₮ USDT (TON)
-          </button>
-          <button id="payMethodBal" onclick="setPaymentCurrency('BALANCE')" class="btn-grow" style="padding: 11px 6px; border-radius: 12px; border: 1px solid #333; background: #1c1c22; color: #aaa; font-weight: 900; font-size: 11px;">
-            👛 Баланс
-          </button>
+          <button id="payMethodGram" onclick="setPaymentCurrency('GRAM')" class="btn-grow" style="padding: 11px 6px; border-radius: 12px; border: 1px solid #fff; background: #fff; color: #000; font-weight: 900; font-size: 11px;">💎 GRAM</button>
+          <button id="payMethodUsdt" onclick="setPaymentCurrency('USDT')" class="btn-grow" style="padding: 11px 6px; border-radius: 12px; border: 1px solid #333; background: #1c1c22; color: #aaa; font-weight: 900; font-size: 11px;">₮ USDT (TON)</button>
+          <button id="payMethodBal" onclick="setPaymentCurrency('BALANCE')" class="btn-grow" style="padding: 11px 6px; border-radius: 12px; border: 1px solid #333; background: #1c1c22; color: #aaa; font-weight: 900; font-size: 11px;">👛 Баланс</button>
         </div>
       </div>
 
-      <!-- Промокод -->
       <div style="background: #141418; border: 1px solid #28282e; padding: 14px; border-radius: 16px; display: flex; flex-direction: column; gap: 8px;">
         <span style="font-size: 11px; text-transform: uppercase; color: #888; font-weight: 700;">Промокод:</span>
         <div style="display: flex; gap: 8px;">
           <input type="text" id="cartPromoInput" placeholder="ВВЕДИТЕ ПРОМОКОД" style="flex: 1; text-transform: uppercase;" class="font-mono">
-          <button onclick="applyCartPromo()" class="btn-grow" style="padding: 0 16px; background: #26262e; color: #fff; border: 1px solid #444; border-radius: 12px; font-weight: 800; font-size: 12px;">
+          <button id="applyPromoBtn" onclick="applyCartPromo()" class="btn-grow" style="padding: 0 16px; background: #26262e; color: #fff; border: 1px solid #444; border-radius: 12px; font-weight: 800; font-size: 12px;">
             Применить
           </button>
         </div>
         <div id="cartPromoStatus" class="hidden" style="font-size: 12px;"></div>
       </div>
 
-      <!-- Итоговая сумма -->
       <div style="background: #141418; border: 1px solid #28282e; padding: 16px; border-radius: 16px; display: flex; justify-content: space-between; align-items: center;">
         <div>
           <div style="font-size: 11px; color: #888; text-transform: uppercase;">Счёт к оплате:</div>
@@ -458,7 +150,7 @@
       </div>
     </section>
 
-    <!-- ================= 3. ОТДЕЛ: КЕЙСЫ (3 КЕЙСА) ================= -->
+    <!-- 3. КЕЙСЫ -->
     <section id="sectionCases" class="hidden" style="display: flex; flex-direction: column; gap: 14px;">
       <div style="display: flex; justify-content: space-between; align-items: center;">
         <div>
@@ -467,17 +159,13 @@
         </div>
         <span class="badge" style="background: #fff; color: #000;">3 кейса</span>
       </div>
-
       <div id="casesListContainer" style="display: flex; flex-direction: column; gap: 14px;"></div>
     </section>
 
-    <!-- ================= 4. ЭКРАН ВЫПОЛНЕНИЯ ЗАКАЗА / ПОПОЛНЕНИЯ ================= -->
+    <!-- 4. ВЫПОЛНЕНИЕ ЗАКАЗА -->
     <section id="sectionOrderTrack" class="hidden" style="display: flex; flex-direction: column; gap: 14px;">
-      
       <div style="display: flex; justify-content: space-between; align-items: center; padding: 4px 0;">
-        <button onclick="switchMainTab('account')" style="background: none; border: none; color: #fff; font-size: 20px; cursor: pointer; padding: 4px 8px;">
-          ‹
-        </button>
+        <button onclick="switchMainTab('account')" style="background: none; border: none; color: #fff; font-size: 20px; cursor: pointer; padding: 4px 8px;">‹</button>
         <div id="trackHeaderNum" class="font-mono" style="font-size: 16px; font-weight: 900;">№ UJ92</div>
         <div style="width: 28px;"></div>
       </div>
@@ -490,7 +178,6 @@
         <span style="color: #666; font-size: 18px;">›</span>
       </div>
 
-      <!-- 3 круглые кнопки действий -->
       <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; text-align: center; padding: 6px 0;">
         <div onclick="toggleOrderDataCollapse()" style="cursor: pointer;">
           <div class="cdek-circle-btn btn-grow">📋</div>
@@ -506,7 +193,6 @@
         </a>
       </div>
 
-      <!-- Данные заказа -->
       <div style="background: #16161a; border: 1px solid #28282e; border-radius: 16px; overflow: hidden;">
         <div onclick="toggleOrderDataCollapse()" style="padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; cursor: pointer;">
           <span style="font-weight: 700; font-size: 14px;">Данные заказа</span>
@@ -525,10 +211,8 @@
         </div>
       </div>
 
-      <!-- Статусы -->
       <div style="background: #16161a; border: 1px solid #28282e; border-radius: 20px; padding: 18px 16px;">
         <div style="font-weight: 800; font-size: 15px; margin-bottom: 16px;">Статусы выполнения</div>
-
         <div class="timeline-row done" id="tlRow1">
           <div class="tl-dot tl-green">📦</div>
           <div style="flex: 1;">
@@ -539,7 +223,6 @@
             <div id="tlDesc1" style="font-size: 12px; color: #aaa; margin-top: 4px;">Счёт сформирован</div>
           </div>
         </div>
-
         <div class="timeline-row" id="tlRow2">
           <div class="tl-dot tl-yellow" id="tlDot2">🔄</div>
           <div style="flex: 1;">
@@ -547,12 +230,9 @@
               <span style="font-weight: 700; font-size: 14px;" id="tlTitle2">Проверка оплаты</span>
               <span id="tlDate2" style="font-size: 11px; color: #777;"></span>
             </div>
-            <div id="tlDesc2" style="font-size: 12px; color: #aaa; margin-top: 4px;">
-              Ожидаем подтверждения счёта в блокчейне TON...
-            </div>
+            <div id="tlDesc2" style="font-size: 12px; color: #aaa; margin-top: 4px;">Ожидаем подтверждения счёта в блокчейне TON...</div>
           </div>
         </div>
-
         <div class="timeline-row" id="tlRow3" style="padding-bottom: 0;">
           <div class="tl-dot tl-gray" id="tlDot3">✓</div>
           <div style="flex: 1;">
@@ -560,9 +240,7 @@
               <span style="font-weight: 700; font-size: 14px; color: #777;" id="tlTitle3">Завершение</span>
               <span id="tlDate3" style="font-size: 11px; color: #777;"></span>
             </div>
-            <div id="tlDesc3" style="font-size: 12px; color: #666; margin-top: 4px;">
-              Ожидает подтверждения оплаты
-            </div>
+            <div id="tlDesc3" style="font-size: 12px; color: #666; margin-top: 4px;">Ожидает подтверждения оплаты</div>
           </div>
         </div>
       </div>
@@ -582,15 +260,12 @@
       </div>
     </section>
 
-    <!-- ================= 5. ОТДЕЛ: АККАУНТ ================= -->
+    <!-- 5. АККАУНТ -->
     <section id="sectionAccount" class="hidden" style="display: flex; flex-direction: column; gap: 14px;">
-      
       <div class="profile-box">
         <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 16px; border-bottom: 1px solid #2a2a32;">
           <div style="display: flex; align-items: center; gap: 12px;">
-            <div id="accAvatar" style="width: 56px; height: 56px; border-radius: 50%; background: #27272f; border: 2px solid #444; overflow: hidden; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 900; color: #fff; flex-shrink: 0;">
-              U
-            </div>
+            <div id="accAvatar" style="width: 56px; height: 56px; border-radius: 50%; background: #27272f; border: 2px solid #444; overflow: hidden; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 900; color: #fff; flex-shrink: 0;">U</div>
             <div>
               <div id="accName" style="font-size: 18px; font-weight: 900; letter-spacing: -0.3px;">Пользователь</div>
               <div style="display: inline-block; background: rgba(245, 158, 11, 0.16); border: 1px solid rgba(245, 158, 11, 0.35); color: #fbbf24; font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 8px; margin-top: 4px;">
@@ -598,7 +273,6 @@
               </div>
             </div>
           </div>
-
           <div class="profile-inv-btn" onclick="document.getElementById('invBlockAnchor').scrollIntoView({behavior:'smooth'})">
             <div>
               <div style="font-size: 11px; color: #888; font-weight: 600;">Инвентарь</div>
@@ -626,7 +300,6 @@
         </div>
       </div>
 
-      <!-- Управление балансом -->
       <div style="background: #16161c; border: 1px solid #2c2c34; border-radius: 18px; padding: 14px 16px; display: flex; justify-content: space-between; align-items: center;">
         <div>
           <div style="font-size: 11px; color: #888; text-transform: uppercase; font-weight: 700;">Ваш баланс:</div>
@@ -634,37 +307,26 @@
             $<span id="accBalanceUsd">0.00</span> <span style="font-size: 12px; color: #888; font-weight: 600;">(<span id="accBalanceGram">0.00</span> GRAM)</span>
           </div>
         </div>
-        <button onclick="openDepositModal()" class="btn-grow" style="padding: 10px 16px; background: #ffffff; color: #000000; border: none; border-radius: 12px; font-weight: 900; font-size: 12px; text-transform: uppercase;">
-          + Пополнить
-        </button>
+        <button onclick="openDepositModal()" class="btn-grow" style="padding: 10px 16px; background: #ffffff; color: #000000; border: none; border-radius: 12px; font-weight: 900; font-size: 12px; text-transform: uppercase;">+ Пополнить</button>
       </div>
 
-      <!-- ИНВЕНТАРЬ -->
       <div id="invBlockAnchor">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-          <span style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 800; letter-spacing: 0.5px;">
-            🎁 Инвентарь выбитых предметов:
-          </span>
-          <button id="sellAllInvBtn" onclick="sellAllInventoryItems()" class="hidden" style="background: none; border: none; color: #fbbf24; font-size: 11px; font-weight: 800; cursor: pointer;">
-            Продать всё
-          </button>
+          <span style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 800; letter-spacing: 0.5px;">🎁 Инвентарь выбитых предметов:</span>
+          <button id="sellAllInvBtn" onclick="sellAllInventoryItems()" class="hidden" style="background: none; border: none; color: #fbbf24; font-size: 11px; font-weight: 800; cursor: pointer;">Продать всё</button>
         </div>
         <div id="accountInventoryGrid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;"></div>
       </div>
 
-      <!-- ИСТОРИЯ -->
       <div>
-        <div style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 800; margin-bottom: 10px; letter-spacing: 0.5px;">
-          История заказов и выполнение:
-        </div>
+        <div style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 800; margin-bottom: 10px; letter-spacing: 0.5px;">История заказов и выполнение:</div>
         <div id="accountOrdersList" style="display: flex; flex-direction: column; gap: 10px;"></div>
       </div>
-
     </section>
 
   </div>
 
-  <!-- ================= ПОПОЛНЕНИЕ ================= -->
+  <!-- МОДАЛКА ПОПОЛНЕНИЯ -->
   <div id="depositModal" class="sheet-backdrop hidden">
     <div class="gift-sheet">
       <div class="sheet-handle"></div>
@@ -672,42 +334,28 @@
         <span style="font-size: 18px; font-weight: 900;">Пополнение баланса</span>
         <button onclick="closeDepositModal()" style="width: 32px; height: 32px; border-radius: 50%; background: #22222a; border: none; color: #aaa; font-size: 16px; cursor: pointer;">✕</button>
       </div>
-
       <div style="display: flex; flex-direction: column; gap: 12px;">
         <div>
-          <label style="font-size: 11px; color: #888; text-transform: uppercase; font-weight: 700; display: block; margin-bottom: 6px;">
-            Сумма пополнения ($ USD):
-          </label>
+          <label style="font-size: 11px; color: #888; text-transform: uppercase; font-weight: 700; display: block; margin-bottom: 6px;">Сумма пополнения ($ USD):</label>
           <input type="number" id="depositUsdInput" value="2.00" min="0.10" step="0.10" oninput="updateDepositPreview()" class="font-mono" style="width: 100%; font-size: 18px; font-weight: 900;">
         </div>
-
         <div>
-          <label style="font-size: 11px; color: #888; text-transform: uppercase; font-weight: 700; display: block; margin-bottom: 6px;">
-            Валюта счёта (сеть TON):
-          </label>
+          <label style="font-size: 11px; color: #888; text-transform: uppercase; font-weight: 700; display: block; margin-bottom: 6px;">Валюта счёта (сеть TON):</label>
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-            <button id="depBtnGram" onclick="setDepositCurrency('GRAM')" class="btn-grow" style="padding: 12px; border-radius: 12px; border: 1px solid #fff; background: #fff; color: #000; font-weight: 900; font-size: 12px;">
-              💎 GRAM (TON)
-            </button>
-            <button id="depBtnUsdt" onclick="setDepositCurrency('USDT')" class="btn-grow" style="padding: 12px; border-radius: 12px; border: 1px solid #333; background: #1c1c22; color: #aaa; font-weight: 900; font-size: 12px;">
-              ₮ USDT (TON)
-            </button>
+            <button id="depBtnGram" onclick="setDepositCurrency('GRAM')" class="btn-grow" style="padding: 12px; border-radius: 12px; border: 1px solid #fff; background: #fff; color: #000; font-weight: 900; font-size: 12px;">💎 GRAM (TON)</button>
+            <button id="depBtnUsdt" onclick="setDepositCurrency('USDT')" class="btn-grow" style="padding: 12px; border-radius: 12px; border: 1px solid #333; background: #1c1c22; color: #aaa; font-weight: 900; font-size: 12px;">₮ USDT (TON)</button>
           </div>
         </div>
-
         <div style="background: #18181f; border: 1px solid #2a2a34; border-radius: 14px; padding: 12px 14px; display: flex; justify-content: space-between; align-items: center;">
           <span style="font-size: 12px; color: #888;">К оплате по чеку:</span>
           <span id="depositCryptoPreview" class="font-mono" style="font-size: 16px; font-weight: 900; color: #fff;">1.74 GRAM</span>
         </div>
-
-        <button onclick="startDepositPayment()" class="btn-grow" style="width: 100%; padding: 15px; background: #ffffff; color: #000000; border: none; border-radius: 16px; font-weight: 900; font-size: 14px; text-transform: uppercase; margin-top: 4px;">
-          Получить счёт в Tonkeeper →
-        </button>
+        <button onclick="startDepositPayment()" class="btn-grow" style="width: 100%; padding: 15px; background: #ffffff; color: #000000; border: none; border-radius: 16px; font-weight: 900; font-size: 14px; text-transform: uppercase; margin-top: 4px;">Получить счёт в Tonkeeper →</button>
       </div>
     </div>
   </div>
 
-  <!-- ================= ВЫИГРЫШ В КЕЙСЕ ================= -->
+  <!-- МОДАЛКА ВЫИГРЫША В КЕЙСЕ -->
   <div id="giftWinModal" class="sheet-backdrop hidden">
     <div class="gift-sheet">
       <div class="sheet-handle"></div>
@@ -715,49 +363,36 @@
         <span style="font-size: 20px; font-weight: 900;">Ваш подарок</span>
         <button onclick="closeGiftWinModal()" style="width: 34px; height: 34px; border-radius: 50%; background: #22222a; border: none; color: #aaa; font-size: 16px; cursor: pointer;">✕</button>
       </div>
-
       <div style="text-align: center; padding: 10px 0 22px;">
-        <div class="gift-img-box">
-          <img id="wonGiftImage" src="" alt="Gift">
-        </div>
+        <div class="gift-img-box"><img id="wonGiftImage" src="" alt="Gift"></div>
         <div id="wonGiftName" style="font-size: 20px; font-weight: 900; margin-top: 6px;">Мишка</div>
         <div id="wonGiftPrice" class="font-mono" style="font-size: 24px; font-weight: 900; color: #ffffff; margin-top: 4px;">$0.23</div>
       </div>
-
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
-        <button onclick="closeGiftWinModal()" class="btn-grow" style="padding: 15px 10px; background: #ffffff; color: #000000; border: none; border-radius: 24px; font-weight: 900; font-size: 13px;">
-          📥 В инвентарь
-        </button>
-        <button id="wonSellBtn" onclick="sellJustWonGift()" class="btn-grow" style="padding: 15px 10px; background: #23232c; color: #ffffff; border: 1px solid #3a3a46; border-radius: 24px; font-weight: 900; font-size: 13px;">
-          Продать $0.23
-        </button>
+        <button onclick="closeGiftWinModal()" class="btn-grow" style="padding: 15px 10px; background: #ffffff; color: #000000; border: none; border-radius: 24px; font-weight: 900; font-size: 13px;">📥 В инвентарь</button>
+        <button id="wonSellBtn" onclick="sellJustWonGift()" class="btn-grow" style="padding: 15px 10px; background: #23232c; color: #ffffff; border: 1px solid #3a3a46; border-radius: 24px; font-weight: 900; font-size: 13px;">Продать $0.23</button>
       </div>
-
       <button id="spinAgainBtn" onclick="spinCaseAgain()" class="btn-grow" style="width: 100%; padding: 16px; background: #1c1c24; color: #ffffff; border: 1px solid #33333e; border-radius: 24px; font-weight: 900; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 8px;">
         <span>↻</span> <span id="spinAgainBtnText">Крутить ещё за $0.40</span>
       </button>
     </div>
   </div>
 
-  <!-- Админ-панель -->
+  <!-- АДМИН-ПАНЕЛЬ -->
   <div id="adminModal" class="hidden" style="position: fixed; inset: 0; background: rgba(0,0,0,0.88); z-index: 110; display: flex; align-items: center; justify-content: center; padding: 16px;">
     <div style="background: #121216; border: 1px solid #333; width: 100%; max-width: 360px; border-radius: 20px; padding: 18px; display: flex; flex-direction: column; gap: 12px;">
       <div style="display: flex; justify-content: space-between; align-items: center;">
         <h3 style="font-size: 14px; font-weight: 800; text-transform: uppercase;">Админ-панель @uj_92</h3>
         <button onclick="toggleAdminModal(false)" style="background: none; border: none; color: #888; font-size: 18px; cursor: pointer;">✕</button>
       </div>
-
       <div>
         <label style="font-size: 11px; color: #888; font-weight: bold;">Курс GRAM ($ с Bybit):</label>
-        <button onclick="fetchGramFromBybit()" class="btn-grow" style="width: 100%; padding: 8px; background: #1f1f27; border: 1px solid #333; color: #fff; border-radius: 10px; font-size: 11px; font-weight: bold; margin: 4px 0 6px;">
-          🔄 Обновить с Bybit сейчас
-        </button>
+        <button onclick="fetchGramFromBybit()" class="btn-grow" style="width: 100%; padding: 8px; background: #1f1f27; border: 1px solid #333; color: #fff; border-radius: 10px; font-size: 11px; font-weight: bold; margin: 4px 0 6px;">🔄 Обновить с Bybit сейчас</button>
         <div style="display: flex; gap: 6px;">
           <input type="number" step="0.01" id="adminGramInput" value="1.15" class="font-mono" style="flex: 1;">
           <button onclick="saveAdminGramRate()" style="background: #fff; color: #000; border: none; padding: 0 14px; border-radius: 10px; font-weight: 800; font-size: 12px;">ОК</button>
         </div>
       </div>
-
       <div>
         <label style="font-size: 11px; color: #888; font-weight: bold;">Установить баланс себе ($):</label>
         <div style="display: flex; gap: 6px; margin-top: 4px;">
@@ -765,10 +400,9 @@
           <button onclick="setAdminSelfBalance()" style="background: #fff; color: #000; border: none; padding: 0 14px; border-radius: 10px; font-weight: 800; font-size: 12px;">ОК</button>
         </div>
       </div>
-
       <div style="border-top: 1px solid #222; padding-top: 10px; display: flex; flex-direction: column; gap: 6px;">
-        <label style="font-size: 11px; color: #888; font-weight: bold;">Добавить промокод:</label>
-        <input type="text" id="newPromoCode" placeholder="КОД (SALE20)" class="font-mono" style="text-transform: uppercase;">
+        <label style="font-size: 11px; color: #888; font-weight: bold;">Создать промокод:</label>
+        <input type="text" id="newPromoCode" placeholder="КОД (например: UJ20)" class="font-mono" style="text-transform: uppercase;">
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
           <input type="number" id="newPromoDiscount" placeholder="Скидка %" value="15" class="font-mono">
           <input type="number" id="newPromoLimit" placeholder="Лимит" value="1" class="font-mono">
@@ -778,25 +412,16 @@
           <option value="ended">🔴 Закончился</option>
           <option value="no_longer_exists">⚪ Больше нет</option>
         </select>
-        <button onclick="createPromo()" style="padding: 10px; background: #26262e; border: 1px solid #444; color: #fff; border-radius: 10px; font-weight: bold; font-size: 12px;">+ Сохранить промокод</button>
-        <div id="promoListContainer" style="max-height: 90px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; margin-top: 4px;"></div>
+        <button id="savePromoBtn" onclick="createPromo()" style="padding: 10px; background: #ffffff; border: none; color: #000; border-radius: 10px; font-weight: 900; font-size: 12px; cursor: pointer;">+ Сохранить промокод</button>
+        <div id="promoListContainer" style="max-height: 110px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; margin-top: 4px;"></div>
       </div>
     </div>
   </div>
 
   <nav class="bottom-nav">
-    <button id="navBtnShop" onclick="switchMainTab('shop')" class="nav-item active">
-      <span style="font-size: 16px;">🛍️</span>
-      <span>Магазин</span>
-    </button>
-    <button id="navBtnCases" onclick="switchMainTab('cases')" class="nav-item">
-      <span style="font-size: 16px;">🎁</span>
-      <span>Кейсы</span>
-    </button>
-    <button id="navBtnAccount" onclick="switchMainTab('account')" class="nav-item">
-      <div id="navMiniAvatar" class="nav-avatar">U</div>
-      <span>Аккаунт</span>
-    </button>
+    <button id="navBtnShop" onclick="switchMainTab('shop')" class="nav-item active"><span style="font-size: 16px;">🛍️</span><span>Магазин</span></button>
+    <button id="navBtnCases" onclick="switchMainTab('cases')" class="nav-item"><span style="font-size: 16px;">🎁</span><span>Кейсы</span></button>
+    <button id="navBtnAccount" onclick="switchMainTab('account')" class="nav-item"><div id="navMiniAvatar" class="nav-avatar">U</div><span>Аккаунт</span></button>
   </nav>
 
   <script>
@@ -806,11 +431,11 @@
     };
 
     const tg = window.Telegram?.WebApp;
-    if (tg) {
-      try { tg.expand(); tg.ready(); } catch(e) {}
-    }
+    if (tg) { try { tg.expand(); tg.ready(); } catch(e) {} }
 
-    const BACKEND_NOTIFY_URL = "https://uj92-shop.onrender.com/notify";
+    const BACKEND_BASE_URL = "https://uj92-shop.onrender.com";
+    const BACKEND_NOTIFY_URL = `${BACKEND_BASE_URL}/notify`;
+    const BACKEND_PROMOS_URL = `${BACKEND_BASE_URL}/promos`;
     const ADMIN_ID = 6189216877;
     const ADMIN_USERNAME = "uj_92";
     const TON_WALLET = "UQBsw7n4ld0lUPutU8HkmuM6ifGHB3YRxYCGQeQlaAtX6F1Y";
@@ -823,122 +448,29 @@
       { id: 'gb', country: 'Британия', code: '+44', price: 1.80, flag: '🇬🇧' }
     ];
 
-    // Общая база всех подарков и номеров для кейсов
     const GIFT_ASSETS = {
-      bear: {
-        id: 'bear',
-        name: 'Обычный подарок Медведь',
-        shortName: 'Мишка',
-        price: 0.23,
-        img: 'https://em-content.zobj.net/source/telegram/386/teddy-bear_1f9f8.webp',
-        fallbackImg: 'https://em-content.zobj.net/source/apple/391/teddy-bear_1f9f8.png'
-      },
-      heart: {
-        id: 'heart',
-        name: 'Обычный подарок Сердечко',
-        shortName: 'Сердечко',
-        price: 0.23,
-        img: 'https://em-content.zobj.net/source/telegram/386/heart-with-ribbon_1f49d.webp',
-        fallbackImg: 'https://em-content.zobj.net/source/apple/391/heart-with-ribbon_1f49d.png'
-      },
-      rose: {
-        id: 'rose',
-        name: 'Обычный подарок Роза',
-        shortName: 'Роза',
-        price: 0.38,
-        img: 'https://em-content.zobj.net/source/telegram/386/rose_1f339.webp',
-        fallbackImg: 'https://em-content.zobj.net/source/apple/391/rose_1f339.png'
-      },
-      bouquet: {
-        id: 'bouquet',
-        name: 'Обычный подарок Букет',
-        shortName: 'Букет',
-        price: 0.75,
-        img: 'https://em-content.zobj.net/source/telegram/386/bouquet_1f490.webp',
-        fallbackImg: 'https://em-content.zobj.net/source/apple/391/bouquet_1f490.png'
-      },
-      diamond: {
-        id: 'diamond',
-        name: 'Подарок Алмаз',
-        shortName: 'Алмаз',
-        price: 1.50,
-        img: 'https://em-content.zobj.net/source/telegram/386/gem-stone_1f48e.webp',
-        fallbackImg: 'https://em-content.zobj.net/source/apple/391/gem-stone_1f48e.png'
-      },
-      num_us: {
-        id: 'num_us',
-        name: 'Номер +1 Америка',
-        shortName: '+1 Америка',
-        price: 0.80,
-        img: 'https://em-content.zobj.net/source/apple/391/flag-united-states_1f1fa-1f1f8.png',
-        fallbackImg: 'https://flagcdn.com/w160/us.png'
-      },
-      num_in: {
-        id: 'num_in',
-        name: 'Номер +91 Индия',
-        shortName: '+91 Индия',
-        price: 0.80,
-        img: 'https://em-content.zobj.net/source/apple/391/flag-india_1f1ee-1f1f3.png',
-        fallbackImg: 'https://flagcdn.com/w160/in.png'
-      },
-      num_bd: {
-        id: 'num_bd',
-        name: 'Номер +880 Бангладеш',
-        shortName: '+880 Бангладеш',
-        price: 1.00,
-        img: 'https://em-content.zobj.net/source/apple/391/flag-bangladesh_1f1e7-1f1e9.png',
-        fallbackImg: 'https://flagcdn.com/w160/bd.png'
-      }
+      bear: { id: 'bear', name: 'Обычный подарок Медведь', shortName: 'Мишка', price: 0.23, img: 'https://em-content.zobj.net/source/telegram/386/teddy-bear_1f9f8.webp', fallbackImg: 'https://em-content.zobj.net/source/apple/391/teddy-bear_1f9f8.png' },
+      heart: { id: 'heart', name: 'Обычный подарок Сердечко', shortName: 'Сердечко', price: 0.23, img: 'https://em-content.zobj.net/source/telegram/386/heart-with-ribbon_1f49d.webp', fallbackImg: 'https://em-content.zobj.net/source/apple/391/heart-with-ribbon_1f49d.png' },
+      rose: { id: 'rose', name: 'Обычный подарок Роза', shortName: 'Роза', price: 0.38, img: 'https://em-content.zobj.net/source/telegram/386/rose_1f339.webp', fallbackImg: 'https://em-content.zobj.net/source/apple/391/rose_1f339.png' },
+      bouquet: { id: 'bouquet', name: 'Обычный подарок Букет', shortName: 'Букет', price: 0.75, img: 'https://em-content.zobj.net/source/telegram/386/bouquet_1f490.webp', fallbackImg: 'https://em-content.zobj.net/source/apple/391/bouquet_1f490.png' },
+      diamond: { id: 'diamond', name: 'Подарок Алмаз', shortName: 'Алмаз', price: 1.50, img: 'https://em-content.zobj.net/source/telegram/386/gem-stone_1f48e.webp', fallbackImg: 'https://em-content.zobj.net/source/apple/391/gem-stone_1f48e.png' },
+      num_us: { id: 'num_us', name: 'Номер +1 Америка', shortName: '+1 Америка', price: 0.80, img: 'https://em-content.zobj.net/source/apple/391/flag-united-states_1f1fa-1f1f8.png', fallbackImg: 'https://flagcdn.com/w160/us.png' },
+      num_in: { id: 'num_in', name: 'Номер +91 Индия', shortName: '+91 Индия', price: 0.80, img: 'https://em-content.zobj.net/source/apple/391/flag-india_1f1ee-1f1f3.png', fallbackImg: 'https://flagcdn.com/w160/in.png' },
+      num_bd: { id: 'num_bd', name: 'Номер +880 Бангладеш', shortName: '+880 Бангладеш', price: 1.00, img: 'https://em-content.zobj.net/source/apple/391/flag-bangladesh_1f1e7-1f1e9.png', fallbackImg: 'https://flagcdn.com/w160/bd.png' }
     };
 
-    // Конфигурация 3 кейсов (с переносом «Пред-приниматель» на новую строку)
     const CASES_CATALOG = [
       {
-        id: 'bomzh',
-        title: 'Кейс «Бомж»',
-        displayTitleHtml: 'Кейс «Бомж»',
-        subtitle: 'Обычные подарки Telegram',
-        price: 0.40,
-        coverImg: 'image_21.png',
-        fallbackCover: GIFT_ASSETS.bear.img,
-        items: [
-          { ...GIFT_ASSETS.bear, chance: 30 },
-          { ...GIFT_ASSETS.heart, chance: 30 },
-          { ...GIFT_ASSETS.rose, chance: 20 },
-          { ...GIFT_ASSETS.bouquet, chance: 20 }
-        ]
+        id: 'bomzh', title: 'Кейс «Бомж»', displayTitleHtml: 'Кейс «Бомж»', subtitle: 'Обычные подарки Telegram', price: 0.40, coverImg: 'image_21.png', fallbackCover: GIFT_ASSETS.bear.img,
+        items: [ { ...GIFT_ASSETS.bear, chance: 30 }, { ...GIFT_ASSETS.heart, chance: 30 }, { ...GIFT_ASSETS.rose, chance: 20 }, { ...GIFT_ASSETS.bouquet, chance: 20 } ]
       },
       {
-        id: 'student',
-        title: 'Кейс «Студент»',
-        displayTitleHtml: 'Кейс «Студент»',
-        subtitle: 'Подарки + Номера США и Индии',
-        price: 0.60,
-        coverImg: 'case_student.png',
-        fallbackCover: GIFT_ASSETS.num_us.img,
-        items: [
-          { ...GIFT_ASSETS.bear, chance: 20 },
-          { ...GIFT_ASSETS.heart, chance: 20 },
-          { ...GIFT_ASSETS.rose, chance: 20 },
-          { ...GIFT_ASSETS.num_us, chance: 20 },
-          { ...GIFT_ASSETS.num_in, chance: 20 }
-        ]
+        id: 'student', title: 'Кейс «Студент»', displayTitleHtml: 'Кейс «Студент»', subtitle: 'Подарки + Номера США и Индии', price: 0.60, coverImg: 'case_student.png', fallbackCover: GIFT_ASSETS.num_us.img,
+        items: [ { ...GIFT_ASSETS.bear, chance: 20 }, { ...GIFT_ASSETS.heart, chance: 20 }, { ...GIFT_ASSETS.rose, chance: 20 }, { ...GIFT_ASSETS.num_us, chance: 20 }, { ...GIFT_ASSETS.num_in, chance: 20 } ]
       },
       {
-        id: 'business',
-        title: 'Кейс «Пред-приниматель»',
-        displayTitleHtml: 'Кейс «Пред-<br>приниматель»',
-        subtitle: 'Номера США, Бангладеш и Алмаз',
-        price: 1.00,
-        coverImg: 'case_business.png',
-        fallbackCover: GIFT_ASSETS.diamond.img,
-        items: [
-          { ...GIFT_ASSETS.bear, chance: 10 },
-          { ...GIFT_ASSETS.rose, chance: 20 },
-          { ...GIFT_ASSETS.num_us, chance: 30 },
-          { ...GIFT_ASSETS.num_bd, chance: 20 },
-          { ...GIFT_ASSETS.diamond, chance: 20 }
-        ]
+        id: 'business', title: 'Кейс «Пред-приниматель»', displayTitleHtml: 'Кейс «Пред-<br>приниматель»', subtitle: 'Номера США, Бангладеш и Алмаз', price: 1.00, coverImg: 'case_business.png', fallbackCover: GIFT_ASSETS.diamond.img,
+        items: [ { ...GIFT_ASSETS.bear, chance: 10 }, { ...GIFT_ASSETS.rose, chance: 20 }, { ...GIFT_ASSETS.num_us, chance: 30 }, { ...GIFT_ASSETS.num_bd, chance: 20 }, { ...GIFT_ASSETS.diamond, chance: 20 } ]
       }
     ];
 
@@ -978,37 +510,51 @@
     }
 
     let userInventory = [];
-    try {
-      userInventory = JSON.parse(storage.get(`uj92_inv_${currentUserKey}`, '[]'));
-    } catch(e) {
-      userInventory = [];
-    }
-    function saveInventory() {
-      storage.set(`uj92_inv_${currentUserKey}`, JSON.stringify(userInventory));
-      updateBalanceUI();
-    }
+    try { userInventory = JSON.parse(storage.get(`uj92_inv_${currentUserKey}`, '[]')); } catch(e) { userInventory = []; }
+    function saveInventory() { storage.set(`uj92_inv_${currentUserKey}`, JSON.stringify(userInventory)); updateBalanceUI(); }
 
+    // БАЗА ПРОМОКОДОВ БЕЗ START15 (ЛОКАЛЬНОЕ РЕЗЕРВНОЕ ХРАНЕНИЕ + СИНХРОНИЗАЦИЯ С СЕРВЕРОМ RENDER)
     let promoDatabase = [];
     try {
-      promoDatabase = JSON.parse(storage.get('uj92_promos', '[]'));
-      if (!promoDatabase.length) {
-        promoDatabase = [{ code: 'START15', discount: 15, limitPerUser: 1, status: 'active', usedUsers: {} }];
-      }
+      const saved = JSON.parse(storage.get('uj92_custom_promos_v3', '[]'));
+      promoDatabase = Array.isArray(saved) ? saved.filter(p => p.code !== 'START15') : [];
     } catch(e) {
-      promoDatabase = [{ code: 'START15', discount: 15, limitPerUser: 1, status: 'active', usedUsers: {} }];
+      promoDatabase = [];
     }
+
+    function saveLocalPromos() {
+      storage.set('uj92_custom_promos_v3', JSON.stringify(promoDatabase));
+    }
+
+    async function syncPromosFromServer() {
+      try {
+        const resp = await fetch(BACKEND_PROMOS_URL);
+        if (resp.ok) {
+          const data = await resp.json();
+          if (Array.isArray(data.promos)) {
+            if (data.promos.length === 0 && promoDatabase.length > 0) {
+              for (const p of promoDatabase) {
+                await fetch(BACKEND_PROMOS_URL, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ action: 'upsert', ...p })
+                });
+              }
+            } else if (data.promos.length > 0) {
+              promoDatabase = data.promos.filter(p => p.code !== 'START15');
+              saveLocalPromos();
+            }
+            renderAdminPromos();
+          }
+        }
+      } catch (e) {}
+    }
+    syncPromosFromServer();
 
     let userOrders = [];
-    try {
-      userOrders = JSON.parse(storage.get(`uj92_orders_${currentUserKey}`, '[]'));
-    } catch(e) {
-      userOrders = [];
-    }
-    function saveOrders() {
-      storage.set(`uj92_orders_${currentUserKey}`, JSON.stringify(userOrders));
-    }
+    try { userOrders = JSON.parse(storage.get(`uj92_orders_${currentUserKey}`, '[]')); } catch(e) { userOrders = []; }
+    function saveOrders() { storage.set(`uj92_orders_${currentUserKey}`, JSON.stringify(userOrders)); }
 
-    // ================= АВТООБНОВЛЕНИЕ КУРСА GRAM С BYBIT =================
     async function fetchGramFromBybit() {
       try {
         const resp = await fetch('https://api.bybit.com/v5/market/tickers?category=spot&symbol=TONUSDT');
@@ -1044,7 +590,6 @@
       if (accGram) accGram.textContent = gramEq;
     }
 
-    // ================= НАВИГАЦИЯ =================
     function switchMainTab(tab) {
       ['sectionShop', 'sectionCart', 'sectionCases', 'sectionOrderTrack', 'sectionAccount'].forEach(id => {
         document.getElementById(id).classList.add('hidden');
@@ -1069,14 +614,8 @@
       window.scrollTo(0, 0);
     }
 
-    // ================= ПОПОЛНЕНИЕ БАЛАНСА =================
-    function openDepositModal() {
-      document.getElementById('depositModal').classList.remove('hidden');
-      updateDepositPreview();
-    }
-    function closeDepositModal() {
-      document.getElementById('depositModal').classList.add('hidden');
-    }
+    function openDepositModal() { document.getElementById('depositModal').classList.remove('hidden'); updateDepositPreview(); }
+    function closeDepositModal() { document.getElementById('depositModal').classList.add('hidden'); }
 
     function setDepositCurrency(cur) {
       state.depositCurrency = cur;
@@ -1100,38 +639,28 @@
 
     function startDepositPayment() {
       const usdVal = parseFloat(document.getElementById('depositUsdInput').value);
-      if (isNaN(usdVal) || usdVal < 0.10) {
-        alert('Минимальная сумма пополнения — $0.10');
-        return;
-      }
+      if (isNaN(usdVal) || usdVal < 0.10) { alert('Минимальная сумма пополнения — $0.10'); return; }
 
       const cryptoVal = state.depositCurrency === 'GRAM' ? (usdVal / state.gramRate) : usdVal;
       const orderId = generateOrderCommentCode('DEP_');
 
       const depOrder = {
-        id: orderId,
-        orderType: 'deposit',
-        currency: state.depositCurrency,
-        cryptoAmount: parseFloat(cryptoVal.toFixed(2)),
-        usdAmount: parseFloat(usdVal.toFixed(2)),
+        id: orderId, orderType: 'deposit', currency: state.depositCurrency,
+        cryptoAmount: parseFloat(cryptoVal.toFixed(2)), usdAmount: parseFloat(usdVal.toFixed(2)),
         items: [{ flag: '💳', country: 'Пополнение баланса', code: `$${usdVal.toFixed(2)}`, qty: 1, sumUsd: usdVal }],
         promo: 'Пополнение счёта',
         createdAt: new Date().toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
-        status: 'pending',
-        paidAt: null,
-        creditedToBalance: false
+        status: 'pending', paidAt: null, creditedToBalance: false
       };
 
       userOrders.unshift(depOrder);
       saveOrders();
       closeDepositModal();
-
       notifyTelegramChats(depOrder, 'created');
       openOrderTracking(depOrder.id);
       openWalletWithInvoice(depOrder);
     }
 
-    // ================= 3 КЕЙСА («БОМЖ», «СТУДЕНТ», «ПРЕД-ПРИНИМАТЕЛЬ») И РУЛЕТКА =================
     function renderCasesTab() {
       const container = document.getElementById('casesListContainer');
       if (!container) return;
@@ -1170,17 +699,10 @@
               <div class="font-mono" style="font-size: 11px; color: #888;">~${gramEq} GRAM</div>
             </div>
           </div>
-
           <div style="border-top: 1px solid #26262e; padding-top: 12px;">
-            <div style="font-size: 10px; text-transform: uppercase; color: #888; font-weight: 700; margin-bottom: 8px;">
-              Что внутри (${c.items.length} поз.):
-            </div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-              ${itemsHtml}
-            </div>
+            <div style="font-size: 10px; text-transform: uppercase; color: #888; font-weight: 700; margin-bottom: 8px;">Что внутри (${c.items.length} поз.):</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">${itemsHtml}</div>
           </div>
-
-          <!-- Блок анимации рулетки для конкретного кейса -->
           <div id="rouletteBox_${c.id}" class="roulette-container hidden">
             <div style="font-size: 12px; font-weight: 800; color: #aaa;">Открываем...</div>
             <div id="rouletteWrap_${c.id}" class="roulette-wrapper">
@@ -1188,7 +710,6 @@
               <div id="rouletteTape_${c.id}" class="roulette-tape"></div>
             </div>
           </div>
-
           <button id="openCaseBtn_${c.id}" onclick="triggerCaseOpener('${c.id}')" class="btn-grow" style="width: 100%; padding: 14px; background: #ffffff; color: #000000; border: none; border-radius: 16px; font-weight: 900; font-size: 13px; text-transform: uppercase; margin-top: 2px; box-shadow: 0 4px 18px rgba(255,255,255,0.16);">
             🎁 Открыть за $${c.price.toFixed(2)}
           </button>
@@ -1200,10 +721,7 @@
     function rollCaseGift(caseObj) {
       const r = Math.random() * 100;
       let acc = 0;
-      for (const item of caseObj.items) {
-        acc += item.chance;
-        if (r < acc) return item;
-      }
+      for (const item of caseObj.items) { acc += item.chance; if (r < acc) return item; }
       return caseObj.items[0];
     }
 
@@ -1221,12 +739,8 @@
 
       state.isOpeningCase = true;
       state.lastOpenedCaseId = caseId;
-
       const btn = document.getElementById(`openCaseBtn_${caseId}`);
-      if (btn) {
-        btn.disabled = true;
-        btn.textContent = '⏳ Открываем...';
-      }
+      if (btn) { btn.disabled = true; btn.textContent = '⏳ Открываем...'; }
 
       state.balanceUsd -= caseObj.price;
       saveUserBalance();
@@ -1234,13 +748,8 @@
       const wonGift = rollCaseGift(caseObj);
       const entryId = 'GIFT_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
       const invEntry = {
-        entryId: entryId,
-        id: wonGift.id,
-        name: wonGift.name,
-        shortName: wonGift.shortName,
-        price: wonGift.price,
-        img: wonGift.img,
-        fallbackImg: wonGift.fallbackImg,
+        entryId: entryId, id: wonGift.id, name: wonGift.name, shortName: wonGift.shortName,
+        price: wonGift.price, img: wonGift.img, fallbackImg: wonGift.fallbackImg,
         wonAt: new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })
       };
 
@@ -1258,15 +767,10 @@
 
       for (let i = 0; i < 36; i++) {
         let currentItem = caseObj.items[Math.floor(Math.random() * caseObj.items.length)];
-        if (i === 30) {
-          currentItem = wonGift;
-        }
+        if (i === 30) currentItem = wonGift;
         const cell = document.createElement('div');
         cell.className = `roulette-item ${i === 30 ? 'marker-won' : ''}`;
-        cell.innerHTML = `
-          <img src="${currentItem.img}" onerror="this.src='${currentItem.fallbackImg}'" alt="">
-          <div style="font-size: 10px; font-weight: bold; color: #ccc;">${currentItem.shortName}</div>
-        `;
+        cell.innerHTML = `<img src="${currentItem.img}" onerror="this.src='${currentItem.fallbackImg}'" alt=""><div style="font-size: 10px; font-weight: bold; color: #ccc;">${currentItem.shortName}</div>`;
         tape.appendChild(cell);
       }
 
@@ -1281,10 +785,7 @@
 
       setTimeout(() => {
         rBox.classList.add('hidden');
-        if (btn) {
-          btn.disabled = false;
-          btn.textContent = `🎁 Открыть за $${caseObj.price.toFixed(2)}`;
-        }
+        if (btn) { btn.disabled = false; btn.textContent = `🎁 Открыть за $${caseObj.price.toFixed(2)}`; }
         state.isOpeningCase = false;
 
         const imgEl = document.getElementById('wonGiftImage');
@@ -1294,14 +795,11 @@
         document.getElementById('wonGiftPrice').textContent = `$${wonGift.price.toFixed(2)}`;
         document.getElementById('wonSellBtn').textContent = `Продать $${wonGift.price.toFixed(2)}`;
         document.getElementById('spinAgainBtnText').textContent = `Крутить ещё за $${caseObj.price.toFixed(2)}`;
-
         document.getElementById('giftWinModal').classList.remove('hidden');
       }, 3350);
     }
 
-    function closeGiftWinModal() {
-      document.getElementById('giftWinModal').classList.add('hidden');
-    }
+    function closeGiftWinModal() { document.getElementById('giftWinModal').classList.add('hidden'); }
 
     function sellJustWonGift() {
       if (!state.lastWonEntryId) return;
@@ -1317,12 +815,8 @@
       closeGiftWinModal();
     }
 
-    function spinCaseAgain() {
-      closeGiftWinModal();
-      triggerCaseOpener(state.lastOpenedCaseId || 'bomzh');
-    }
+    function spinCaseAgain() { closeGiftWinModal(); triggerCaseOpener(state.lastOpenedCaseId || 'bomzh'); }
 
-    // ================= КАТАЛОГ И КОРЗИНА =================
     function renderCatalog() {
       const box = document.getElementById('catalogContainer');
       if (!box) return;
@@ -1331,7 +825,6 @@
       PRODUCTS.forEach(p => {
         const qty = state.cart[p.id] || 0;
         const gramPrice = (p.price / state.gramRate).toFixed(2);
-
         const el = document.createElement('div');
         el.className = 'product-card';
         el.innerHTML = `
@@ -1348,7 +841,6 @@
               <div class="font-mono" style="font-size: 11px; color: #888;">~${gramPrice} GRAM</div>
             </div>
           </div>
-
           <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #242429; padding-top: 10px;">
             <span style="font-size: 12px; color: #999; font-weight: 600;">Количество номеров:</span>
             <div style="display: flex; align-items: center; gap: 10px;">
@@ -1360,32 +852,22 @@
         `;
         box.appendChild(el);
       });
-
       updateFloatingCart();
     }
 
     function updateItemQty(id, delta) {
       const cur = state.cart[id] || 0;
       const next = Math.max(0, cur + delta);
-      if (next === 0) delete state.cart[id];
-      else state.cart[id] = next;
-
+      if (next === 0) delete state.cart[id]; else state.cart[id] = next;
       renderCatalog();
-      if (!document.getElementById('sectionCart').classList.contains('hidden')) {
-        renderCartScreen();
-      }
+      if (!document.getElementById('sectionCart').classList.contains('hidden')) renderCartScreen();
     }
 
-    function clearCart() {
-      state.cart = {};
-      switchMainTab('shop');
-    }
+    function clearCart() { state.cart = {}; switchMainTab('shop'); }
 
     function getCartTotals() {
-      let totalQty = 0;
-      let rawUsd = 0;
+      let totalQty = 0, rawUsd = 0;
       const items = [];
-
       for (let id in state.cart) {
         const prod = PRODUCTS.find(p => p.id === id);
         if (prod && state.cart[id] > 0) {
@@ -1395,15 +877,8 @@
           items.push({ ...prod, qty: q, sumUsd: prod.price * q });
         }
       }
-
-      const finalUsd = state.appliedDiscount > 0
-        ? rawUsd * (1 - state.appliedDiscount / 100)
-        : rawUsd;
-
-      const finalCrypto = state.currency === 'GRAM'
-        ? (finalUsd / state.gramRate)
-        : finalUsd;
-
+      const finalUsd = state.appliedDiscount > 0 ? rawUsd * (1 - state.appliedDiscount / 100) : rawUsd;
+      const finalCrypto = state.currency === 'GRAM' ? (finalUsd / state.gramRate) : finalUsd;
       return { totalQty, rawUsd, finalUsd, finalCrypto, items };
     }
 
@@ -1422,19 +897,16 @@
     function openCartScreen() {
       const { totalQty } = getCartTotals();
       if (totalQty === 0) return;
-
       document.getElementById('sectionShop').classList.add('hidden');
       document.getElementById('sectionCart').classList.remove('hidden');
+      syncPromosFromServer();
       renderCartScreen();
       window.scrollTo(0, 0);
     }
 
     function renderCartScreen() {
       const { totalQty, finalUsd, finalCrypto, items } = getCartTotals();
-      if (totalQty === 0) {
-        switchMainTab('shop');
-        return;
-      }
+      if (totalQty === 0) { switchMainTab('shop'); return; }
 
       const container = document.getElementById('cartItemsContainer');
       container.innerHTML = '';
@@ -1476,22 +948,31 @@
         BALANCE: document.getElementById('payMethodBal')
       };
       Object.keys(map).forEach(k => {
-        if (k === cur) {
-          map[k].style.background = '#fff'; map[k].style.color = '#000'; map[k].style.borderColor = '#fff';
-        } else {
-          map[k].style.background = '#1c1c22'; map[k].style.color = '#aaa'; map[k].style.borderColor = '#333';
-        }
+        if (k === cur) { map[k].style.background = '#fff'; map[k].style.color = '#000'; map[k].style.borderColor = '#fff'; }
+        else { map[k].style.background = '#1c1c22'; map[k].style.color = '#aaa'; map[k].style.borderColor = '#333'; }
       });
       renderCartScreen();
     }
 
-    function applyCartPromo() {
+    // ПРОВЕРКА И ПРИМЕНЕНИЕ ПРОМОКОДА В КОРЗИНЕ
+    async function applyCartPromo() {
       const code = document.getElementById('cartPromoInput').value.trim().toUpperCase();
       const msg = document.getElementById('cartPromoStatus');
+      const btn = document.getElementById('applyPromoBtn');
       msg.classList.remove('hidden');
 
+      if (!code) {
+        msg.style.color = '#ef4444';
+        msg.textContent = 'Введите промокод';
+        return;
+      }
+
+      if (btn) btn.textContent = '...';
+      await syncPromosFromServer();
+      if (btn) btn.textContent = 'Применить';
+
       const userKey = getTgUser().username.toLowerCase();
-      const promo = promoDatabase.find(p => p.code === code);
+      const promo = promoDatabase.find(p => p.code.toUpperCase() === code);
 
       if (!promo || promo.status === 'no_longer_exists') {
         msg.style.color = '#ef4444';
@@ -1519,11 +1000,10 @@
       state.appliedPromo = promo.code;
       state.appliedDiscount = promo.discount;
       msg.style.color = '#22c55e';
-      msg.textContent = `✓ Скидка ${promo.discount}% применена`;
+      msg.textContent = `✓ Скидка ${promo.discount}% по промокоду ${promo.code} применена!`;
       renderCartScreen();
     }
 
-    // ================= ОФОРМЛЕНИЕ ЗАКАЗА =================
     function generateOrderCommentCode(prefix = 'UJ92_') {
       const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789';
       let code = prefix;
@@ -1543,16 +1023,34 @@
 
     function openWalletWithInvoice(order) {
       const invoiceUrl = buildTonkeeperInvoiceUrl(order);
-      if (tg && typeof tg.openLink === 'function') {
-        tg.openLink(invoiceUrl);
-      } else {
-        window.location.href = invoiceUrl;
+      if (tg && typeof tg.openLink === 'function') tg.openLink(invoiceUrl);
+      else window.location.href = invoiceUrl;
+    }
+
+    async function markPromoUsed(promoCode) {
+      if (!promoCode) return;
+      const uKey = getTgUser().username.toLowerCase();
+      const p = promoDatabase.find(x => x.code === promoCode);
+      if (p) {
+        if (!p.usedUsers) p.usedUsers = {};
+        p.usedUsers[uKey] = (p.usedUsers[uKey] || 0) + 1;
+        saveLocalPromos();
       }
+      try {
+        await fetch(BACKEND_PROMOS_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'use', code: promoCode, userKey: uKey })
+        });
+      } catch (e) {}
     }
 
     function checkoutCartOrder() {
       const totals = getCartTotals();
       if (totals.totalQty === 0) return;
+
+      const usedPromoCode = state.appliedPromo;
+      const promoLabel = state.appliedPromo ? `${state.appliedPromo} (-${state.appliedDiscount}%)` : 'Нет';
 
       if (state.currency === 'BALANCE') {
         if (state.balanceUsd < totals.finalUsd) {
@@ -1564,25 +1062,20 @@
         state.balanceUsd -= totals.finalUsd;
         saveUserBalance();
 
+        if (usedPromoCode) markPromoUsed(usedPromoCode);
+
         const orderId = generateOrderCommentCode('BAL_');
         const paidOrder = {
-          id: orderId,
-          orderType: 'phone',
-          currency: 'USD (Баланс)',
-          cryptoAmount: parseFloat(totals.finalUsd.toFixed(2)),
-          usdAmount: parseFloat(totals.finalUsd.toFixed(2)),
-          items: totals.items,
-          promo: state.appliedPromo ? `${state.appliedPromo} (-${state.appliedDiscount}%)` : 'Нет',
+          id: orderId, orderType: 'phone', currency: 'USD (Баланс)',
+          cryptoAmount: parseFloat(totals.finalUsd.toFixed(2)), usdAmount: parseFloat(totals.finalUsd.toFixed(2)),
+          items: totals.items, promo: promoLabel,
           createdAt: new Date().toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
-          status: 'paid',
-          paidAt: new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })
+          status: 'paid', paidAt: new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })
         };
 
         userOrders.unshift(paidOrder);
         saveOrders();
-        state.cart = {};
-        state.appliedPromo = null;
-        state.appliedDiscount = 0;
+        state.cart = {}; state.appliedPromo = null; state.appliedDiscount = 0;
 
         notifyTelegramChats(paidOrder, 'paid');
         openOrderTracking(paidOrder.id);
@@ -1591,34 +1084,18 @@
 
       const orderId = generateOrderCommentCode('UJ92_');
       const newOrder = {
-        id: orderId,
-        orderType: 'phone',
-        currency: state.currency,
-        cryptoAmount: parseFloat(totals.finalCrypto.toFixed(2)),
-        usdAmount: parseFloat(totals.finalUsd.toFixed(2)),
-        items: totals.items,
-        promo: state.appliedPromo ? `${state.appliedPromo} (-${state.appliedDiscount}%)` : 'Нет',
+        id: orderId, orderType: 'phone', currency: state.currency,
+        cryptoAmount: parseFloat(totals.finalCrypto.toFixed(2)), usdAmount: parseFloat(totals.finalUsd.toFixed(2)),
+        items: totals.items, promo: promoLabel,
         createdAt: new Date().toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
-        status: 'pending',
-        paidAt: null
+        status: 'pending', paidAt: null
       };
 
       userOrders.unshift(newOrder);
       saveOrders();
+      if (usedPromoCode) markPromoUsed(usedPromoCode);
 
-      if (state.appliedPromo) {
-        const p = promoDatabase.find(x => x.code === state.appliedPromo);
-        const uKey = getTgUser().username.toLowerCase();
-        if (p) {
-          if (!p.usedUsers) p.usedUsers = {};
-          p.usedUsers[uKey] = (p.usedUsers[uKey] || 0) + 1;
-          storage.set('uj92_promos', JSON.stringify(promoDatabase));
-        }
-      }
-
-      state.cart = {};
-      state.appliedPromo = null;
-      state.appliedDiscount = 0;
+      state.cart = {}; state.appliedPromo = null; state.appliedDiscount = 0;
 
       notifyTelegramChats(newOrder, 'created');
       openOrderTracking(newOrder.id);
@@ -1630,23 +1107,17 @@
       if (order) openWalletWithInvoice(order);
     }
 
-    // ================= УВЕДОМЛЕНИЯ RENDER =================
     async function notifyTelegramChats(order, eventType) {
       const user = getTgUser();
       try {
         await fetch(BACKEND_NOTIFY_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            order: order,
-            user: user,
-            eventType: eventType
-          })
+          body: JSON.stringify({ order, user, eventType })
         });
       } catch (e) {}
     }
 
-    // ================= ТРЕКЕР И ПРОВЕРКА =================
     let checkInterval = null;
 
     function openOrderTracking(orderId) {
@@ -1662,13 +1133,10 @@
       const user = getTgUser();
       document.getElementById('trackHeaderNum').textContent = `№ ${order.id}`;
       document.getElementById('trackBuyerName').textContent = `${user.name} (${user.username})`;
-
       document.getElementById('trackItemsList').innerHTML = order.items
-        .map(i => `<div style="padding: 3px 0;">${i.flag} <b>${i.country} (${i.code})</b> — ${i.qty} шт. ($${i.sumUsd.toFixed(2)})</div>`)
-        .join('');
+        .map(i => `<div style="padding: 3px 0;">${i.flag} <b>${i.country} (${i.code})</b> — ${i.qty} шт. ($${i.sumUsd.toFixed(2)})</div>`).join('');
       document.getElementById('trackCommentCode').textContent = order.id;
       document.getElementById('trackTotalAmount').textContent = `${order.cryptoAmount} ${order.currency} ($${order.usdAmount})`;
-
       document.getElementById('tlDate1').textContent = order.createdAt;
       document.getElementById('tlDesc1').textContent = order.items.map(i => `${i.country} × ${i.qty}`).join(', ');
 
@@ -1708,65 +1176,45 @@
       const title2 = document.getElementById('tlTitle2');
       const desc2 = document.getElementById('tlDesc2');
       const date2 = document.getElementById('tlDate2');
-
       const dot3 = document.getElementById('tlDot3');
       const title3 = document.getElementById('tlTitle3');
       const desc3 = document.getElementById('tlDesc3');
-
       const bottomText = document.getElementById('bottomPayBadgeText');
       const reopenBtn = document.getElementById('reopenWalletBtn');
-
       const isDeposit = order.orderType === 'deposit';
 
       if (order.status === 'paid') {
         row2.className = 'timeline-row done';
-        dot2.className = 'tl-dot tl-green';
-        dot2.textContent = '✓';
-        title2.textContent = 'Получена оплата';
-        title2.style.color = '#22c55e';
+        dot2.className = 'tl-dot tl-green'; dot2.textContent = '✓';
+        title2.textContent = 'Получена оплата'; title2.style.color = '#22c55e';
         date2.textContent = order.paidAt || '';
         desc2.innerHTML = `Счёт оплачен (${order.cryptoAmount} ${order.currency})`;
 
-        dot3.className = 'tl-dot tl-green';
-        dot3.textContent = '✓';
+        dot3.className = 'tl-dot tl-green'; dot3.textContent = '✓';
         title3.style.color = '#ffffff';
         title3.textContent = isDeposit ? 'Баланс пополнен' : 'Готов к выдаче';
         desc3.innerHTML = isDeposit
           ? `Сумма <b>$${order.usdAmount.toFixed(2)}</b> зачислена на ваш баланс!`
           : `Напишите администратору <a href="https://t.me/uj_92" target="_blank" style="color: #3b82f6; font-weight: bold;">@uj_92</a> для получения номера`;
 
-        bottomText.textContent = 'Оплачено';
-        bottomText.style.color = '#22c55e';
+        bottomText.textContent = 'Оплачено'; bottomText.style.color = '#22c55e';
         if (reopenBtn) reopenBtn.classList.add('hidden');
       } else if (order.status === 'error') {
         row2.className = 'timeline-row';
-        dot2.className = 'tl-dot tl-red';
-        dot2.textContent = '!';
-        title2.textContent = 'Ошибка / Оплата не найдена';
-        title2.style.color = '#ef4444';
+        dot2.className = 'tl-dot tl-red'; dot2.textContent = '!';
+        title2.textContent = 'Ошибка / Оплата не найдена'; title2.style.color = '#ef4444';
         desc2.innerHTML = `Оплата по счёту <b>${order.id}</b> не обнаружена в блокчейне. Обратитесь к поддержке: <a href="https://t.me/uj_92" target="_blank" style="color: #3b82f6; font-weight: bold;">@uj_92</a>`;
-
-        dot3.className = 'tl-dot tl-gray';
-        title3.style.color = '#777';
-        desc3.textContent = 'Ожидает подтверждения оплаты';
-
-        bottomText.innerHTML = 'Ошибка — напишите @uj_92';
-        bottomText.style.color = '#ef4444';
+        dot3.className = 'tl-dot tl-gray'; title3.style.color = '#777'; desc3.textContent = 'Ожидает подтверждения оплаты';
+        bottomText.innerHTML = 'Ошибка — напишите @uj_92'; bottomText.style.color = '#ef4444';
         if (reopenBtn) reopenBtn.classList.remove('hidden');
       } else {
         row2.className = 'timeline-row';
-        dot2.className = 'tl-dot tl-yellow';
-        dot2.textContent = '🔄';
-        title2.textContent = 'Проверка оплаты счёта';
-        title2.style.color = '#ffffff';
-        desc2.innerHTML = `Проверяем поступление <b>${order.cryptoAmount} ${order.currency}</b> с комментарием <b>${order.id}</b>. Если возникла ошибка — обратитесь в поддержку <a href="https://t.me/uj_92" target="_blank" style="color: #3b82f6;">@uj_92</a>`;
-
-        dot3.className = 'tl-dot tl-gray';
-        title3.style.color = '#777';
+        dot2.className = 'tl-dot tl-yellow'; dot2.textContent = '🔄';
+        title2.textContent = 'Проверка оплаты счёта'; title2.style.color = '#ffffff';
+        desc2.innerHTML = `Проверяем поступление <b>${order.cryptoAmount} ${order.currency}</b> с комментарием <b>${order.id}</b>. При ошибке пишите <a href="https://t.me/uj_92" target="_blank" style="color: #3b82f6;">@uj_92</a>`;
+        dot3.className = 'tl-dot tl-gray'; title3.style.color = '#777';
         desc3.textContent = isDeposit ? 'Зачисление средств на баланс после оплаты' : 'Выдача номера после оплаты';
-
-        bottomText.textContent = 'Ожидает оплаты';
-        bottomText.style.color = '#f59e0b';
+        bottomText.textContent = 'Ожидает оплаты'; bottomText.style.color = '#f59e0b';
         if (reopenBtn) reopenBtn.classList.remove('hidden');
       }
     }
@@ -1782,32 +1230,23 @@
         const resp = await fetch(`https://tonapi.io/v2/accounts/${TON_WALLET}/events?limit=25`);
         if (resp.ok) {
           const data = await resp.json();
-          const events = data.events || [];
           let found = false;
-
-          for (const ev of events) {
-            const actions = ev.actions || [];
-            for (const act of actions) {
+          for (const ev of (data.events || [])) {
+            for (const act of (ev.actions || [])) {
               const jComment = act.JettonTransfer?.comment || '';
               const tComment = act.TonTransfer?.comment || '';
-              if (jComment.includes(order.id) || tComment.includes(order.id)) {
-                found = true;
-                break;
-              }
+              if (jComment.includes(order.id) || tComment.includes(order.id)) { found = true; break; }
             }
             if (found) break;
           }
-
           if (found) {
             order.status = 'paid';
             order.paidAt = new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
-
             if (order.orderType === 'deposit' && !order.creditedToBalance) {
               order.creditedToBalance = true;
               state.balanceUsd += order.usdAmount;
               saveUserBalance();
             }
-
             saveOrders();
             renderTrackingStepsUI(order);
             if (checkInterval) clearInterval(checkInterval);
@@ -1819,23 +1258,19 @@
         saveOrders();
         renderTrackingStepsUI(order);
       }
-
       if (btn) btn.textContent = '🔄 Проверить';
     }
 
-    // ================= АККАУНТ И ИНВЕНТАРЬ =================
     function initUserAvatar() {
       const user = getTgUser();
       const miniAv = document.getElementById('navMiniAvatar');
       const mainAv = document.getElementById('accAvatar');
-
       if (user.photo) {
         miniAv.innerHTML = `<img src="${user.photo}" style="width:100%;height:100%;object-fit:cover;">`;
         mainAv.innerHTML = `<img src="${user.photo}" style="width:100%;height:100%;object-fit:cover;">`;
       } else {
         const letter = (user.name[0] || 'U').toUpperCase();
-        miniAv.textContent = letter;
-        mainAv.textContent = letter;
+        miniAv.textContent = letter; mainAv.textContent = letter;
       }
       document.getElementById('accName').textContent = user.name;
       document.getElementById('accUsernameTag').textContent = user.username;
@@ -1862,11 +1297,7 @@
 
       if (userInventory.length === 0) {
         sellAllBtn.classList.add('hidden');
-        invGrid.innerHTML = `
-          <div style="grid-column: 1 / -1; background: #141418; border: 1px solid #26262e; border-radius: 18px; padding: 20px; text-align: center; color: #777; font-size: 12px;">
-            В вашем инвентаре пока нет предметов.<br>Откройте кейсы во вкладке «Кейсы»!
-          </div>
-        `;
+        invGrid.innerHTML = `<div style="grid-column: 1 / -1; background: #141418; border: 1px solid #26262e; border-radius: 18px; padding: 20px; text-align: center; color: #777; font-size: 12px;">В вашем инвентаре пока нет предметов.<br>Откройте кейсы во вкладке «Кейсы»!</div>`;
       } else {
         sellAllBtn.classList.remove('hidden');
         userInventory.forEach(item => {
@@ -1877,12 +1308,8 @@
             <div style="font-size: 13px; font-weight: 800;">${item.shortName}</div>
             <div class="font-mono" style="font-size: 12px; font-weight: 900; color: #fff;">$${item.price.toFixed(2)}</div>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; width: 100%; margin-top: 4px;">
-              <button onclick="sellInventoryItem('${item.entryId}')" class="btn-grow" style="padding: 7px 4px; background: #252530; color: #fff; border: 1px solid #3a3a46; border-radius: 10px; font-size: 10px; font-weight: 800;">
-                Продать
-              </button>
-              <button onclick="withdrawInventoryItem('${item.entryId}')" class="btn-grow" style="padding: 7px 4px; background: #ffffff; color: #000; border: none; border-radius: 10px; font-size: 10px; font-weight: 800;">
-                Вывести
-              </button>
+              <button onclick="sellInventoryItem('${item.entryId}')" class="btn-grow" style="padding: 7px 4px; background: #252530; color: #fff; border: 1px solid #3a3a46; border-radius: 10px; font-size: 10px; font-weight: 800;">Продать</button>
+              <button onclick="withdrawInventoryItem('${item.entryId}')" class="btn-grow" style="padding: 7px 4px; background: #ffffff; color: #000; border: none; border-radius: 10px; font-size: 10px; font-weight: 800;">Вывести</button>
             </div>
           `;
           invGrid.appendChild(card);
@@ -1893,11 +1320,7 @@
       listEl.innerHTML = '';
 
       if (totalCount === 0) {
-        listEl.innerHTML = `
-          <div style="background: #141418; border: 1px solid #26262e; border-radius: 18px; padding: 20px; text-align: center; color: #777; font-size: 12px;">
-            У вас пока нет созданных заказов.
-          </div>
-        `;
+        listEl.innerHTML = `<div style="background: #141418; border: 1px solid #26262e; border-radius: 18px; padding: 20px; text-align: center; color: #777; font-size: 12px;">У вас пока нет созданных заказов.</div>`;
         return;
       }
 
@@ -1905,7 +1328,6 @@
         const badgeColor = o.status === 'paid' ? '#22c55e' : (o.status === 'error' ? '#ef4444' : '#f59e0b');
         const badgeText = o.status === 'paid' ? 'Оплачено' : (o.status === 'error' ? 'Ошибка / Не оплачен' : 'Проверка оплаты');
         const itemsSummary = o.items.map(i => `${i.flag} ${i.country} ×${i.qty}`).join(', ');
-
         const card = document.createElement('div');
         card.className = 'btn-grow';
         card.onclick = () => openOrderTracking(o.id);
@@ -1955,13 +1377,9 @@
       const item = userInventory[idx];
       userInventory.splice(idx, 1);
       saveInventory();
-
       const withdrawOrder = {
-        id: 'GIFT_' + Math.floor(100000 + Math.random() * 900000),
-        orderType: 'gift_withdraw',
-        currency: 'GIFT',
-        cryptoAmount: item.price,
-        usdAmount: item.price,
+        id: 'GIFT_' + Math.floor(100000 + Math.random() * 900000), orderType: 'gift_withdraw', currency: 'GIFT',
+        cryptoAmount: item.price, usdAmount: item.price,
         items: [{ flag: '🎁', country: item.name, code: `$${item.price.toFixed(2)}`, qty: 1, sumUsd: item.price }],
         promo: 'Вывод предмета из кейса'
       };
@@ -1970,7 +1388,6 @@
       renderAccountTab();
     }
 
-    // ================= АДМИН-ДОСТУП =================
     function verifyAdminAccess() {
       const u = tg?.initDataUnsafe?.user;
       const isOwner = (u && (u.id === ADMIN_ID || u.username?.toLowerCase() === ADMIN_USERNAME)) || storage.get('uj92_admin_ok') === 'true';
@@ -1994,70 +1411,88 @@
 
     function toggleAdminModal(show) {
       document.getElementById('adminModal').classList.toggle('hidden', !show);
-      if (show) renderAdminPromos();
+      if (show) { syncPromosFromServer(); renderAdminPromos(); }
     }
 
     function saveAdminGramRate() {
       const v = parseFloat(document.getElementById('adminGramInput').value);
-      if (v > 0) {
-        state.gramRate = v;
-        storage.set('uj92_gram_rate_bybit', v.toString());
-        updateRateDisplays();
-        alert('Курс обновлён');
-      }
+      if (v > 0) { state.gramRate = v; storage.set('uj92_gram_rate_bybit', v.toString()); updateRateDisplays(); alert('Курс обновлён'); }
     }
 
     function setAdminSelfBalance() {
       const v = parseFloat(document.getElementById('adminBalanceInput').value);
-      if (!isNaN(v) && v >= 0) {
-        state.balanceUsd = v;
-        saveUserBalance();
-        alert(`Баланс установлен: $${v.toFixed(2)}`);
-      }
+      if (!isNaN(v) && v >= 0) { state.balanceUsd = v; saveUserBalance(); alert(`Баланс установлен: $${v.toFixed(2)}`); }
     }
 
-    function createPromo() {
+    // СОЗДАНИЕ И СОХРАНЕНИЕ ПРОМОКОДОВ В АДМИНКЕ
+    async function createPromo() {
       const code = document.getElementById('newPromoCode').value.trim().toUpperCase();
       const disc = parseInt(document.getElementById('newPromoDiscount').value);
       const lim = parseInt(document.getElementById('newPromoLimit').value) || 1;
       const status = document.getElementById('newPromoStatus').value;
-      if (!code || isNaN(disc)) return;
+
+      if (!code || isNaN(disc) || disc <= 0) {
+        alert('Укажите код промокода и процент скидки!');
+        return;
+      }
 
       const ex = promoDatabase.find(p => p.code === code);
       if (ex) { ex.discount = disc; ex.limitPerUser = lim; ex.status = status; }
       else promoDatabase.push({ code, discount: disc, limitPerUser: lim, status, usedUsers: {} });
 
-      storage.set('uj92_promos', JSON.stringify(promoDatabase));
+      saveLocalPromos();
       renderAdminPromos();
       document.getElementById('newPromoCode').value = '';
+
+      const btn = document.getElementById('savePromoBtn');
+      if (btn) btn.textContent = '⏳ Сохраняем...';
+      try {
+        const resp = await fetch(BACKEND_PROMOS_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'upsert', code, discount: disc, limitPerUser: lim, status })
+        });
+        if (resp.ok) {
+          const data = await resp.json();
+          if (Array.isArray(data.promos)) { promoDatabase = data.promos; saveLocalPromos(); renderAdminPromos(); }
+        }
+      } catch (e) {}
+      if (btn) btn.textContent = '+ Сохранить промокод';
     }
 
     function renderAdminPromos() {
       const box = document.getElementById('promoListContainer');
+      if (!box) return;
       box.innerHTML = '';
+      if (promoDatabase.length === 0) {
+        box.innerHTML = '<div style="font-size:11px;color:#666;text-align:center;padding:6px;">Нет созданных промокодов</div>';
+        return;
+      }
       promoDatabase.forEach(p => {
         const d = document.createElement('div');
-        d.style.cssText = 'display:flex;justify-content:space-between;background:#1c1c22;padding:6px 8px;border-radius:8px;font-size:11px;';
-        d.innerHTML = `<span><b>${p.code}</b> (-${p.discount}%)</span><button onclick="deletePromo('${p.code}')" style="color:#ef4444;background:none;border:none;cursor:pointer;">✕</button>`;
+        d.style.cssText = 'display:flex;justify-content:space-between;align-items:center;background:#1c1c22;padding:6px 10px;border-radius:8px;font-size:11px;';
+        d.innerHTML = `<span><b>${p.code}</b> (-${p.discount}%, лимит: ${p.limitPerUser})</span><button onclick="deletePromo('${p.code}')" style="color:#ef4444;background:none;border:none;cursor:pointer;font-size:13px;">✕</button>`;
         box.appendChild(d);
       });
     }
 
-    function deletePromo(c) {
+    async function deletePromo(c) {
       promoDatabase = promoDatabase.filter(p => p.code !== c);
-      storage.set('uj92_promos', JSON.stringify(promoDatabase));
+      saveLocalPromos();
       renderAdminPromos();
+      try {
+        await fetch(BACKEND_PROMOS_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'delete', code: c })
+        });
+      } catch (e) {}
     }
 
-    // ================= ФОНОВЫЕ ВОЛНЫ =================
     const canvas = document.getElementById('waveCanvas');
     const ctx = canvas.getContext('2d');
     let width, height, step = 0;
-
-    function resize() {
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
-    }
+    function resize() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; }
     window.addEventListener('resize', resize);
     resize();
 
@@ -2077,8 +1512,7 @@
         ctx.lineWidth = w.w;
         for (let x = 0; x <= width; x += 10) {
           const y = w.y + Math.sin(x * w.len + step * w.spd) * w.amp;
-          if (x === 0) ctx.moveTo(x, y);
-          else ctx.lineTo(x, y);
+          if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
         }
         ctx.stroke();
       });
